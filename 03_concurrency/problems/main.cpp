@@ -1,0 +1,3 @@
+// race condition
+// deadlock
+// starvation
