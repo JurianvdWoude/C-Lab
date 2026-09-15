@@ -1,6 +1,7 @@
 # C++ Lab
+The C++ Lab is a personal practice folder for better understanding various programming concepts without concern.
 
-A simple checklist for tracking work across 8 numbered directories, each with its own project folders.
+This is a simple checklist for tracking work in this project across five numbered directories, each with its own project folders.
 
 ## Progress Checklist
 
