@@ -1,11 +1,12 @@
 #include <iostream>
 #include <initializer_list>
+#include <stdexcept>
 
 template <class T>
 class Vector {
-  T* data = nullptr;
   std::size_t size;
   std::size_t capacity;
+  T* data = nullptr;
 
   void grow() {
     grow_capacity();
@@ -17,7 +18,7 @@ class Vector {
   }
 
   void shrink() {
-    shrink_capacity();
+    if (shrink_capacity()) return;
     T* new_data = new T[capacity];
     for (std::size_t i = 0; i < size; i++) 
       new_data[i] = data[i];
@@ -32,13 +33,24 @@ class Vector {
     }
   }
 
-  void shrink_capacity() {
-    while ((this->size * 2) < this->capacity) {
-      std::size_t current = this->capacity;
-      if (current > 1) {
-        this->capacity = current / 2;
-      }
+  bool shrink_capacity() {
+    std::size_t current = this->capacity;
+    if (current > 1) {
+      this->capacity = current / 2;
+      return true;
     }
+    return false;
+  }
+
+  std::size_t initialize_capacity(std::size_t value) {
+    if (value <= 1) 
+      return 1;
+
+    std::size_t container_size = 1;
+    while (value > container_size) {
+      container_size <<= 1;
+    }
+    return container_size;
   }
 
   public:
@@ -46,14 +58,20 @@ class Vector {
       data = nullptr;
     }
 
-    Vector(std::initializer_list<T> init) : data(new T[init.size()]), size(init.size()), capacity(1) {
+    Vector(std::initializer_list<T> init) : size(init.size()), capacity(initialize_capacity(init.size())), data(new T[capacity]) {
       std::size_t i = 0;
       for (const auto& value : init) {
         data[i++] = value;
       }
-      size = i;
-      grow_capacity();
+      this->size = i;
     }
+
+    Vector(const Vector& vec) : size(vec.size), capacity(vec.capacity), data(new T[vec.capacity]) {
+      for (std::size_t i = 0; i < vec.size; i++) {
+        data[i] = vec.data[i];
+      }
+    }
+
     ~Vector() {delete[] data;}
 
     void push_back(T value) {
@@ -64,6 +82,8 @@ class Vector {
     }
 
     T pop_back() {
+      if (size == 0) 
+        throw std::out_of_range("pop_back() on vector when size is 0");
       T value = data[size - 1];
       --size;
       if (size * 2 == capacity) 
@@ -71,11 +91,11 @@ class Vector {
       return value;
     }
 
-    const std::size_t get_size() const {
+    std::size_t get_size() const {
       return size;
     }
 
-    const std::size_t get_capacity() const {
+    std::size_t get_capacity() const {
       return capacity;
     }
 
@@ -101,7 +121,7 @@ template <class T>
 Vector<T>& Vector<T>::operator= (const Vector<T>& vec) {
   this->size = vec.size;
   this->capacity = vec.capacity;
-  T* new_data = new T[vec.size];
+  T* new_data = new T[vec.capacity];
   for (std::size_t i = 0; i < vec.size; i++) 
     new_data[i] = vec.data[i];
   delete[] this->data;
