@@ -72,12 +72,18 @@ class Vector {
       }
     }
 
+    Vector(Vector&& vec) noexcept : size(vec.size), capacity(vec.capacity), data(vec.data) { 
+      vec.capacity = 0;
+      vec.size = 0;
+      vec.data = nullptr;
+    }
+
     ~Vector() {delete[] data;}
 
     void push_back(T value) {
       if (size == capacity)
         grow();
-      data[size] = value;
+      data[size] = std::move(value);
       ++size;
     }
 
@@ -101,9 +107,18 @@ class Vector {
 
     template <class U>
     friend std::ostream& operator<< (std::ostream& os, const Vector<U>& vec);
+    template <class U>
+    friend Vector<U> operator+ (const Vector<U>& lhs, const Vector<U>& rhs);
 
+    T& operator[] (std::size_t i);
     Vector& operator= (const Vector& vec);
+    Vector& operator= (Vector&& vec);
+    Vector& operator+= (const Vector& rhs);
 };
+template <class T>
+T& Vector<T>::operator[] (std::size_t i) {
+  return data[i];
+}
 
 template <class T>
 std::ostream& operator<< (std::ostream& os, const Vector<T>& vec) {
@@ -118,14 +133,48 @@ std::ostream& operator<< (std::ostream& os, const Vector<T>& vec) {
 }
 
 template <class T>
+Vector<T>& Vector<T>::operator+= (const Vector<T>& vec) {
+  if (vec.size != size)
+    throw std::invalid_argument("cannot add Vectors of different sizes");
+  for(std::size_t i = 0; i < vec.size; i++) {
+    this->data[i] += vec.data[i];
+  }
+  return *this;
+}
+
+template <class T>
 Vector<T>& Vector<T>::operator= (const Vector<T>& vec) {
-  this->size = vec.size;
-  this->capacity = vec.capacity;
   T* new_data = new T[vec.capacity];
   for (std::size_t i = 0; i < vec.size; i++) 
     new_data[i] = vec.data[i];
   delete[] this->data;
-  this->data = new_data;
+
+  data = new_data;
+  size = vec.size;
+  capacity = vec.capacity;
+
   return *this;
 }
 
+template <class T>
+Vector<T>& Vector<T>::operator= (Vector<T>&& vec) {
+  if (this != &vec) {
+    delete[] data;
+
+    data = vec.data;
+    size = vec.size;
+    capacity = vec.capacity;
+
+    vec.data = nullptr;
+    vec.size = 0;
+    vec.capacity = 0;
+  }
+  return *this;
+}
+
+template <class T>
+Vector<T> operator+ (const Vector<T>& lhs, const Vector<T>& rhs) {
+  Vector<T> result = lhs;
+  result += rhs;
+  return result;
+}

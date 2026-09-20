@@ -24,8 +24,18 @@ int main()
 
     std::cout << "c: " << c << '\n';
 
-    c.pop_back();
+    Vector<int> d{1, 2, 4};
+    Vector<int> e{1, 1, 1};
 
-    std::cout << "a: " << a << '\n';
-    std::cout << "c: " << c << '\n';
+    std::cout << "d: " << d << '\n';
+    std::cout << "e: " << e << '\n';
+
+    d += e;
+
+    std::cout << "d += e: " << d << '\n';
+
+    d = e + e;
+
+    std::cout << "d = e + e: " << d << '\n';
+    std::cout << "a[2]: " << a[2] << '\n';
 }
