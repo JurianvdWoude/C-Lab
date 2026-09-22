@@ -1,33 +1,43 @@
 #include <iostream>
 #include <chrono>
 
+using Clock = std::chrono::steady_clock;
+using Duration = std::chrono::duration<double>;
 
-decltype(std::chrono::steady_clock::now()) getCurrentTime() {
-  return std::chrono::steady_clock::now();
-}
+const auto TIME_PER_UPDATE = Duration{1.0 / 60.0};
 
 void processInput() {
-  std::cout << "processing input" << '\n';
+  std::cout << "i";
 }
 
-void update(double elapsedTime) {
-  std::cout << "updating game, elapsed time: " << elapsedTime << " s" << '\n';
+void update(Duration deltaTime) {
+  std::cout << "\n\n-=-=-=-\n\n  updating\n\n-=-=-=-\n\n";
 }
 
-void render() {
-  std::cout << "rendering image" << '\n';
+void render(double alpha) {
+  std::cout << "r";
 }
 
 int main() {
-  auto lastTime = getCurrentTime();
-  while (true) {
-    auto current = getCurrentTime();
-    std::chrono::duration<double> elapsedTime = current - lastTime;
-    processInput();
-    update(elapsedTime.count());
-    render();
+  auto previousTime = Clock::now();
+  auto lag = Duration::zero();
 
-    lastTime = current;
+  while (true) {
+    auto currentTime = Clock::now();
+    Duration deltaTime = currentTime - previousTime;
+
+    previousTime = currentTime;
+    lag += deltaTime;
+
+    processInput();
+
+    while (lag >= TIME_PER_UPDATE) {
+      update(TIME_PER_UPDATE);
+      lag -= TIME_PER_UPDATE;
+    }
+    
+    double alpha = lag / TIME_PER_UPDATE;
+    render(alpha);
   }
   return 0;
 }
