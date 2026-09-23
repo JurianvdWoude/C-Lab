@@ -8,7 +8,7 @@ This is a simple checklist for tracking work in this project across five numbere
 ### 1. Data Structures
 - [x] vector
 - [x] linked list
-- [ ] stack
+- [x] stack
 - [ ] queue
 - [ ] hash table
 - [ ] binary tree [optional]
@@ -16,7 +16,15 @@ This is a simple checklist for tracking work in this project across five numbere
 - [ ] graph [optional]
 
 ### 2. Patterns
-- [ ] ??
+- [ ] command
+- [ ] flyweight
+- [ ] observer
+- [ ] prototype
+- [ ] singleton
+- [ ] state
+- [ ] double buffer
+- [x] game loop
+- [ ] update method
 
 ### 3. Concurrency
 - [ ] async
@@ -25,7 +33,20 @@ This is a simple checklist for tracking work in this project across five numbere
 - [ ] synchronization
 - [ ] threads
 
-### 4. Linux
+### 4. Modern
+- [ ] language
+- [ ] cmake
+- [ ] compilers
+- [ ] tooling
+- [ ] vcpkg
+- [ ] conan
+- [x] pybind11
+- [ ] automation
+- [ ] packaging
+- [ ] interop
+- [ ] testing
+
+### 5. Linux
 - [ ] processes and ipc
 - [ ] file descriptors and io
 - [ ] memory
@@ -35,7 +56,7 @@ This is a simple checklist for tracking work in this project across five numbere
 - [ ] scheduling
 - [ ] profiling
 
-### 5 Sockets
+### 6 Sockets
 - [ ] epoll
 - [ ] multiple clients
 - [ ] protocol

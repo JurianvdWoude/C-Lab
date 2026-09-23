@@ -8,8 +8,5 @@ public:
   Command* handleInput();
 
 private:
-  Command* buttonW_;
-  Command* buttonA_;
-  Command* buttonS_;
-  Command* buttonD_;
+  std::unordered_map<char, Command*> bindings_;
 };

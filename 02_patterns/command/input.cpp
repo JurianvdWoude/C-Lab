@@ -23,14 +23,6 @@ Command* InputHandler::handleInput() {
     return it->second;
 
   return nulltptr;
-
-  //switch (input) {
-  //  case 'w': return buttonW_;
-  //  case 'a': return buttonA_;
-  //  case 's': return buttonS_;
-  //  case 'd': return buttonD_;
-  //  default:  return nullptr;
-  //}
 }
 
 void InputHandler::bind(char button, Command* command) {
