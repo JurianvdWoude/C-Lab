@@ -43,7 +43,7 @@ This is a simple checklist for tracking work in this project across five numbere
 - [x] pybind11
 - [ ] automation
 - [ ] packaging
-- [ ] interop
+- [x] interop
 - [ ] testing
 
 ### 5. Linux

@@ -2,14 +2,14 @@
 #include "actor.h"
 
 void GameActor::jump() {
-  std::cout << "the character jumps into the air" << '\n';
+  std::cout << "  The character jumps into the air\n" << std::endl;
 }
 void GameActor::moveLeft() {
-  std::cout << "the character takes one step to the left" << '\n';
+  std::cout << "  The character takes one step to the left\n" << std::endl;
 }
 void GameActor::moveRight() {
-  std::cout << "the character takes on step to the right" << '\n';
+  std::cout << "  The character takes one step to the right\n" << std::endl;
 }
 void GameActor::crouch() {
-  std::cout << "the character is crouching down" << '\n';
+  std::cout << "  The character is crouching down\n" << std::endl;
 }

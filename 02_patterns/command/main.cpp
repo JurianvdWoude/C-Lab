@@ -28,6 +28,7 @@ int main() {
     &moveRightCommand,
   };
 
+  inputHandler.printBindings();
   while (true) {
     processInput(actor, inputHandler);
   }
