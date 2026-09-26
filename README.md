@@ -16,7 +16,7 @@ This is a simple checklist for tracking work in this project across five numbere
 - [ ] graph [optional]
 
 ### 2. Patterns
-- [ ] command
+- [x] command
 - [ ] flyweight
 - [ ] observer
 - [ ] prototype
