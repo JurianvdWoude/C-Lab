@@ -6,22 +6,29 @@
 #include <stdexcept>
 #include <vector>
 
+template <class K, class V>
+struct Entry {
+  K key;
+  V value;
+};
+
+template <class K, class V>
 class HashTable {
   std::size_t bucketCount;
   std::size_t size;
-  std::hash<int> hasher;
-  std::vector<std::vector<int>> table;
-  std::size_t hashFunction(int key) const {
+  std::hash<K> hasher;
+  std::vector<std::vector<Entry<K, V>>> table;
+  std::size_t hashFunction(K &key) const {
     return hasher(key) % bucketCount;
   }
   double loadFactor() const { return static_cast<double>(size) / bucketCount; }
   void rehash(std::size_t new_bucket_count) {
-    std::vector<std::vector<int>> new_table(new_bucket_count);
+    std::vector<std::vector<Entry<K, V>>> new_table(new_bucket_count);
 
     for (const auto &bucket : table) {
-      for (int key : bucket) {
-        std::size_t index = hasher(key) % new_bucket_count;
-        new_table[index].push_back(key);
+      for (const Entry<K, V> &entry : bucket) {
+        std::size_t index = hasher(entry.key) % new_bucket_count;
+        new_table[index].push_back(entry);
       }
     }
     table = std::move(new_table);
@@ -35,17 +42,16 @@ public:
       throw std::invalid_argument("bucket size must be larger than 0");
     }
   };
-  HashTable(std::initializer_list<int> init, int b)
-      : bucketCount(b), size(0), table(b) {
-    if (b < 1) {
+  HashTable(std::initializer_list<T> init)
+      : bucketCount(init.size()), size(0), table(init.size()) {
+    if (init.size() < 1) {
       throw std::invalid_argument("bucket size must be larger than 0");
     }
     for (const auto &key : init) {
       insert(key);
     }
   }
-  ~HashTable() {}
-  void insert(int key) {
+  void insert(const T &key) {
     if (contains(key)) {
       return;
     }
@@ -56,7 +62,7 @@ public:
       rehash(bucketCount * 2);
     }
   };
-  bool contains(int key) const {
+  bool contains(T &key) const {
     std::size_t index = hashFunction(key);
     for (const auto &table_key : table[index]) {
       if (key == table_key) {
@@ -65,26 +71,31 @@ public:
     }
     return false;
   }
-  bool remove(int key) {
-    if (!contains(key))
-      return false;
-
+  bool remove(const T &key) {
     std::size_t index = hashFunction(key);
     auto &inner = table[index];
-    inner.erase(std::remove(inner.begin(), inner.end(), key), inner.end());
 
+    auto it = std::find(inner.begin(), inner.end(), key);
+
+    if (it == inner.end()) {
+      return false;
+    }
+
+    inner.erase(it);
     size--;
     return true;
   }
   std::size_t count() const { return size; };
   std::size_t buckets() const { return bucketCount; };
 
-  friend std::ostream &operator<<(std::ostream &os, const HashTable &ht);
+  template <class U>
+  friend std::ostream &operator<<(std::ostream &os, const HashTable<U> &ht);
 
-  HashTable &operator=(const HashTable &ht);
+  HashTable<T> &operator=(const HashTable<T> &ht);
 };
 
-HashTable &HashTable::operator=(const HashTable &ht) {
+template <class T>
+HashTable<T> &HashTable<T>::operator=(const HashTable<T> &ht) {
   if (this == &ht) {
     return *this;
   }
@@ -95,7 +106,8 @@ HashTable &HashTable::operator=(const HashTable &ht) {
   return *this;
 }
 
-std::ostream &operator<<(std::ostream &os, const HashTable &ht) {
+template <class T>
+std::ostream &operator<<(std::ostream &os, const HashTable<T> &ht) {
   os << "{";
   std::size_t table_index = 0;
   for (const auto &bucket : ht.table) {
@@ -117,23 +129,15 @@ std::ostream &operator<<(std::ostream &os, const HashTable &ht) {
 }
 
 int main() {
-  HashTable a;
-  a.insert(1);
-  a.insert(4);
-  a.insert(15);
-  std::cout << a << '\n';
-  HashTable b({1, 2, 3}, 8);
-  std::cout << b << '\n';
-  HashTable c = b;
-  std::cout << "size:" << c.count() << ",buckets:" << c.buckets() << ",c:" << c << '\n';
-  c.remove(3);
-  std::cout << "size:" << c.count() << ",buckets:" << c.buckets() << ",c:" << c << '\n';
-  c.insert(8);
-  c.insert(9);
-  c.insert(10);
-  c.insert(11);
-  c.insert(12);
-  c.insert(13);
-  std::cout << "size:" << c.count() << ",buckets:" << c.buckets() << ",c:" << c << '\n';
+  HashTable<int> a({1, 2, 3});
+  std::cout << "size:" << a.count() << ",buckets:" << a.buckets() << ",a:" << a << '\n';
+
+  HashTable<std::string> b({"a", "A", "b", "c", "hello world"}); 
+  std::cout << "size:" << b.count() << ",buckets:" << b.buckets() << ",b:" << b << '\n';
+
+  std::cout << b.contains("hello") << ", " << b.contains("hello world") << '\n';
+  b.remove("c");
+  std::cout << "size:" << b.count() << ",buckets:" << b.buckets() << ",b:" << b << '\n';
+
   return 0;
 }
