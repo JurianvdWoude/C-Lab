@@ -9,8 +9,7 @@ This is a simple checklist for tracking work in this project across five numbere
 - [x] vector
 - [x] linked list
 - [x] stack
-- [ ] queue
-- [ ] hash table
+- [x] hash table
 - [ ] binary tree [optional]
 - [ ] heap [optional]
 - [ ] graph [optional]

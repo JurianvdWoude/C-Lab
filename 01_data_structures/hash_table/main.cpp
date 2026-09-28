@@ -13,14 +13,14 @@ class HashTable {
     K key;
     V value;
   };
-  std::size_t bucketCount;
+  std::size_t bucket_count;
   std::size_t size;
   std::hash<K> hasher;
   std::vector<std::vector<Entry>> table;
   std::size_t hashFunction(const K &key) const {
-    return hasher(key) % bucketCount;
+    return hasher(key) % bucket_count;
   }
-  double loadFactor() const { return static_cast<double>(size) / bucketCount; }
+  double loadFactor() const { return static_cast<double>(size) / bucket_count; }
   void rehash(std::size_t new_bucket_count) {
     std::vector<std::vector<Entry>> new_table(new_bucket_count);
 
@@ -31,18 +31,18 @@ class HashTable {
       }
     }
     table = std::move(new_table);
-    bucketCount = new_bucket_count;
+    bucket_count = new_bucket_count;
   }
 
 public:
-  HashTable() : bucketCount(8), size(0), table(8) {}
-  HashTable(int b) : bucketCount(b), size(0), table(b) {
+  HashTable() : bucket_count(8), size(0), table(8) {}
+  HashTable(int b) : bucket_count(b), size(0), table(b) {
     if (b < 1) {
       throw std::invalid_argument("bucket size must be larger than 0");
     }
   }
   HashTable(std::initializer_list<std::pair<K, V>> init)
-      : bucketCount(init.size()), size(0), table(init.size()) {
+      : bucket_count(init.size()), size(0), table(init.size()) {
     if (init.size() < 1) {
       throw std::invalid_argument("bucket size must be larger than 0");
     }
@@ -58,7 +58,7 @@ public:
     table[index].push_back({key, value});
     size++;
     if (loadFactor() > 0.75) {
-      rehash(bucketCount * 2);
+      rehash(bucket_count * 2);
     }
   };
   bool contains(const K &key) const {
@@ -96,7 +96,7 @@ public:
     return false;
   }
   std::size_t count() const { return size; };
-  std::size_t buckets() const { return bucketCount; };
+  std::size_t buckets() const { return bucket_count; };
 
   template <class I, class J>
   friend std::ostream &operator<<(std::ostream &os, const HashTable<I, J> &ht);
