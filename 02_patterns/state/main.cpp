@@ -1,46 +1,17 @@
-#include <iostream>
+#include <chrono>
+#include <thread>
+#include "locations.h"
+#include "entity.h"
 
-class Troll;
-
-class State {
-  virtual ~State() = default;
-  virtual void execute(Troll& troll) = 0;
-}
-
-class State_RunAway : public State {
-public:
-  void execute(Troll& troll) override {
-    if (troll.isSafe()) {
-      troll.changeState(std::make_unique<State_Sleep>());
-    } else {
-      troll.moveAwayFromEnemy();
-    }
-  }
-}
-
-class State_Sleep : public State {
-public:
-  void execute(Troll& troll) override {
-    if (troll.isThreatened()) {
-      troll.changeState(std::make_unique<State_RunAway>())
-    } else {
-      troll.snore();
-    }
-  }
-}
-
-class Troll {
-  std::unique_pointer<State> m_pCurrentState;
-public:
-  void update() {
-    b_pCurrentState->execute(*this);
-  }
-  void changeState(const std::unique_pointer<State> pNewState) {
-    m_pCurrentState = std::move(pNewState);
-  }
+void Sleep(int ms) {
+  std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 
 int main() {
-  std::cout << "hello world" << std::endl;
+  Miner miner(ent_Miner_Bob);
+  for (int i=0; i < 20; ++i) {
+    miner.Update();
+    Sleep(800);
+  }
   return 0;
 }
