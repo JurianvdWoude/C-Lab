@@ -20,7 +20,7 @@ This is a simple checklist for tracking work in this project across five numbere
 - [ ] observer
 - [ ] prototype
 - [ ] singleton
-- [ ] state
+- [x] state
 - [ ] double buffer
 - [x] game loop
 - [ ] update method
@@ -33,17 +33,12 @@ This is a simple checklist for tracking work in this project across five numbere
 - [ ] threads
 
 ### 4. Modern
-- [ ] language
+- [x] language
 - [ ] cmake
-- [ ] compilers
 - [ ] tooling
-- [ ] vcpkg
-- [ ] conan
-- [x] pybind11
-- [ ] automation
-- [ ] packaging
 - [x] interop
-- [ ] testing
+- [x] testing
+- [x] ai
 
 ### 5. Linux
 - [ ] processes and ipc
