@@ -28,9 +28,9 @@ This is a simple checklist for tracking work in this project across five numbere
 ### 3. Concurrency
 - [ ] async
 - [ ] patterns
-- [ ] problems
-- [ ] synchronization
-- [ ] threads
+- [x] problems
+- [x] synchronization
+- [x] threads
 
 ### 4. Modern
 - [x] language
